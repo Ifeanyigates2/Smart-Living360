@@ -23,6 +23,7 @@ function RequestForm() {
   const params = useSearchParams();
   const raw = params.get("category") ?? "";
   const preset = (CATEGORIES as readonly string[]).includes(raw) ? raw : "";
+  const cleaning = preset === "Home care";
 
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -82,10 +83,12 @@ function RequestForm() {
     <div className="container page">
       <div className="split">
         <div>
-          <p className="eyebrow">New request</p>
-          <h1 className="page-title">Request a service</h1>
+          <p className="eyebrow">{cleaning ? "Cleaning" : "New request"}</p>
+          <h1 className="page-title">{cleaning ? "Request cleaning" : "Request a service"}</h1>
           <p className="lead">
-            Tell us what you need. We will reply with a written quote before anything is booked.
+            {cleaning
+              ? "Tell us the rooms and how often. We reply with a written quote before the visit is booked."
+              : "Tell us what you need. We will reply with a written quote before anything is booked."}
           </p>
           <form className="request form-card" onSubmit={onSubmit} noValidate>
             <Field label="Service category" name="category" error={errors.category}>
@@ -94,7 +97,9 @@ function RequestForm() {
                   Choose one
                 </option>
                 {CATEGORIES.map((c) => (
-                  <option key={c}>{c}</option>
+                  <option key={c} value={c}>
+                    {c === "Home care" ? "Cleaning" : c}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -126,7 +131,7 @@ function RequestForm() {
         <aside className="aside">
           <h2>What happens next</h2>
           <ol>
-            <li>We read the request and match it to a provider.</li>
+            <li>{cleaning ? "We match the clean to a verified cleaner." : "We read the request and match it to a provider."}</li>
             <li>You get a written quote. Payment waits until you approve it.</li>
             <li>After you approve, the job is booked and you can follow it.</li>
           </ol>

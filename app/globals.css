@@ -229,13 +229,13 @@ h3 { margin: 0 0 0.35rem; font-size: 1.15rem; }
 .hero-frame {
   position: relative;
   margin: 0;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 3;
   border-radius: 28px;
   overflow: hidden;
   box-shadow: 0 28px 60px rgba(7, 32, 72, 0.18);
   background: #d7e2f2;
 }
-.hero-img { object-fit: cover; object-position: 32% 42%; }
+.hero-img { object-fit: cover; object-position: center 28%; }
 .hero-card {
   position: absolute;
   left: 0.9rem;
@@ -263,7 +263,7 @@ h3 { margin: 0 0 0.35rem; font-size: 1.15rem; }
   gap: 1.15rem;
   grid-template-columns: 1fr;
 }
-@media (min-width: 800px) {
+@media (min-width: 720px) {
   .service-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .service-card {
@@ -289,6 +289,32 @@ h3 { margin: 0 0 0.35rem; font-size: 1.15rem; }
 .service-body h2 { font-size: 1.35rem; margin: 0; }
 .service-body p { margin: 0; color: var(--muted); }
 .service-go { margin-top: 0.55rem; font-weight: 750; color: var(--navy); font-size: 0.92rem; }
+
+.also-grid {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 720px) {
+  .also-grid { grid-template-columns: 1fr 1fr; }
+}
+.also-card {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 1rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  padding-right: 1.1rem;
+}
+.also-card:hover { box-shadow: 0 12px 28px rgba(12, 35, 70, 0.08); }
+.also-photo { position: relative; height: 7.5rem; background: #e7eef8; }
+.also-photo img { object-fit: cover; }
+.also-card h3 { margin: 0 0 0.2rem; font-size: 1.15rem; }
+.also-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
 /* How it works */
 .band {
@@ -632,6 +658,11 @@ footer.site {
   padding-top: 1rem;
   border-top: 1px solid var(--line);
   font-size: 0.88rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  flex-wrap: wrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

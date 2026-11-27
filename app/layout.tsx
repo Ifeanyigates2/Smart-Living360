@@ -15,7 +15,7 @@ const sans = Outfit({
 export const metadata: Metadata = {
   title: "Smart-Living360 Global",
   description:
-    "One trusted place for the building, the people who maintain it and the services that make it work.",
+    "Home and office cleaning, plus repairs and building support, through one trusted place.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -32,21 +32,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="footer-brand">
               <Wordmark compact />
               <p>
-                One trusted place for the building, the people who maintain it, and the services
-                that make it work.
+                Home and office cleaning first. Repairs and building support when the property needs
+                more than a clean.
               </p>
             </div>
             <nav className="footer-col" aria-label="Footer">
               <span className="footer-label">Customers</span>
-              <Link href="/#services">Services</Link>
-              <Link href="/request">Request a service</Link>
+              <Link href="/#services">Cleaning</Link>
+              <Link href="/request?category=Home%20care">Request cleaning</Link>
             </nav>
             <div className="footer-col">
               <span className="footer-label">The promise</span>
               <p>Every fee is disclosed. A written quote comes before anything is booked.</p>
             </div>
           </div>
-          <div className="container footer-base">© Smart-Living360 Global</div>
+          <div className="container footer-base">
+            <span>© Smart-Living360 Global</span>
+            <span>Powered By Cicitz 24 Ventures</span>
+          </div>
         </footer>
       </body>
     </html>

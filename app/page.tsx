@@ -1,13 +1,44 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/request-schema";
 import { siteImages } from "@/lib/images";
 
-const descriptions: Record<string, string> = {
-  "Home care": "Cleaning, laundry and recurring plans",
-  Repairs: "Plumbing, electrical, AC and more",
-  "Build & materials": "Supplies and construction support",
-};
+const cleaningHref = "/request?category=Home%20care";
+
+const cleaningOffers = [
+  {
+    title: "Homes",
+    text: "Kitchens, bathrooms, laundry and a regular clean for the house.",
+    image: siteImages.cleaning.home,
+    position: "center",
+  },
+  {
+    title: "Offices",
+    text: "Desks, floors and shared workspaces, once or on a schedule.",
+    image: siteImages.cleaning.office,
+    position: "70% center",
+  },
+  {
+    title: "Recurring visits",
+    text: "The same clean, week after week, with the price written down first.",
+    image: siteImages.cleaning.recurring,
+    position: "center 20%",
+  },
+];
+
+const otherServices = [
+  {
+    title: "Repairs",
+    text: "Plumbing, electrical, AC and more",
+    image: siteImages.categories.Repairs,
+    href: "/request?category=Repairs",
+  },
+  {
+    title: "Build & materials",
+    text: "Supplies and construction support",
+    image: siteImages.categories["Build & materials"],
+    href: "/request?category=Build%20%26%20materials",
+  },
+];
 
 export default function HomePage() {
   return (
@@ -15,35 +46,35 @@ export default function HomePage() {
       <section className="hero-wrap">
         <div className="container hero">
           <div>
-            <p className="eyebrow">Home care · Repairs · Building</p>
+            <p className="eyebrow">Cleaning, first</p>
             <h1>
-              Cleaning services and all your building&apos;s needs,{" "}
-              <em>through one trusted platform.</em>
+              Home and office cleaning, <em>booked with a written quote.</em>
             </h1>
             <p className="lead">
-              Find the right service, verify the provider, agree the price, pay through a regulated
-              partner, and hold us accountable for the result.
+              Tell us the rooms and how often. We match a verified cleaner, agree the price, and
+              hold the visit to that quote. Repairs and building work are here too, when you need
+              them.
             </p>
             <div className="hero-actions">
-              <Link href="/request" className="btn">
-                Request a service
+              <Link href={cleaningHref} className="btn">
+                Request cleaning
               </Link>
               <a href="#services" className="btn btn-outline">
-                See services
+                See cleaning
               </a>
             </div>
             <ul className="trust-row">
               <li>
                 <i className="dot dot-green" aria-hidden="true" />
                 <div>
-                  <strong>Written quote</strong>
-                  <span>Before anything is booked</span>
+                  <strong>Homes and offices</strong>
+                  <span>One-off visits or a plan</span>
                 </div>
               </li>
               <li>
                 <i className="dot dot-navy" aria-hidden="true" />
                 <div>
-                  <strong>Verified provider</strong>
+                  <strong>Verified cleaner</strong>
                   <span>Named on the job</span>
                 </div>
               </li>
@@ -60,15 +91,15 @@ export default function HomePage() {
             <Image
               className="hero-img"
               src={siteImages.hero}
-              alt="A verified technician repairing a kitchen sink"
+              alt="A cleaning team ready for a home or office visit"
               fill
               priority
               sizes="(min-width: 900px) 460px, 100vw"
             />
             <figcaption className="hero-card">
-              <span className="badge badge-green">Verified</span>
-              <strong>Kitchen repair, agreed first</strong>
-              <span>The price is written down before the visit.</span>
+              <span className="badge badge-green">Cleaning</span>
+              <strong>Weekly clean, agreed first</strong>
+              <span>The price is written down before anyone arrives.</span>
             </figcaption>
           </figure>
         </div>
@@ -76,26 +107,46 @@ export default function HomePage() {
 
       <section id="services" className="container section">
         <div className="section-head">
-          <p className="eyebrow">What we cover</p>
-          <h2>Three ways we look after a property.</h2>
-          <p className="lead">Pick a category and tell us what the building needs. We reply with a quote.</p>
+          <p className="eyebrow">Cleaning</p>
+          <h2>The clean, on the schedule the building needs.</h2>
+          <p className="lead">Homes, offices and standing visits. Each one starts with a written quote.</p>
         </div>
         <div className="service-grid">
-          {CATEGORIES.map((c) => (
-            <Link className="service-card" key={c} href={`/request?category=${encodeURIComponent(c)}`}>
-              {siteImages.categories[c] && (
-                <div className="service-photo">
-                  <Image
-                    src={siteImages.categories[c]}
-                    alt=""
-                    fill
-                    sizes="(min-width: 800px) 30vw, 100vw"
-                  />
-                </div>
-              )}
+          {cleaningOffers.map((offer) => (
+            <Link className="service-card" key={offer.title} href={cleaningHref}>
+              <div className="service-photo">
+                <Image
+                  src={offer.image}
+                  alt=""
+                  fill
+                  sizes="(min-width: 800px) 30vw, 100vw"
+                  style={{ objectPosition: offer.position }}
+                />
+              </div>
               <div className="service-body">
-                <h2>{c}</h2>
-                <p>{descriptions[c]}</p>
+                <h2>{offer.title}</h2>
+                <p>{offer.text}</p>
+                <span className="service-go">Request cleaning</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="container section" aria-labelledby="also-heading">
+        <div className="section-head">
+          <p className="eyebrow">Also on the platform</p>
+          <h2 id="also-heading">Repairs and building, when the clean is not the whole job.</h2>
+        </div>
+        <div className="also-grid">
+          {otherServices.map((service) => (
+            <Link className="also-card" key={service.title} href={service.href}>
+              <div className="also-photo">
+                <Image src={service.image} alt="" fill sizes="160px" />
+              </div>
+              <div>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
                 <span className="service-go">Request this</span>
               </div>
             </Link>
@@ -106,24 +157,24 @@ export default function HomePage() {
       <section className="band" aria-labelledby="how-heading">
         <div className="container">
           <div className="section-head">
-            <p className="eyebrow">How it works</p>
-            <h2 id="how-heading">Agree the work before anyone arrives.</h2>
+            <p className="eyebrow">How a clean is booked</p>
+            <h2 id="how-heading">Agree the visit before anyone arrives.</h2>
           </div>
           <ol className="steps">
             <li>
               <span className="num">01</span>
-              <h3>Tell us the job</h3>
-              <p>Category, property and what needs doing. A time window helps.</p>
+              <h3>Tell us the clean</h3>
+              <p>Home or office, which rooms, and how often. A time window helps.</p>
             </li>
             <li>
               <span className="num">02</span>
               <h3>Read the quote</h3>
-              <p>Service, materials and the platform fee are each on their own line.</p>
+              <p>The visit and every fee are on their own lines. Nothing is booked until you approve it.</p>
             </li>
             <li>
               <span className="num">03</span>
               <h3>See the result</h3>
-              <p>The provider is named on the job. Photos of the finished work stay with it.</p>
+              <p>The cleaner is named on the job. Photos of the finished work stay with it.</p>
             </li>
           </ol>
         </div>
@@ -132,12 +183,12 @@ export default function HomePage() {
       <section className="container closer-wrap">
         <div className="closer">
           <div>
-            <p className="eyebrow">Start with a request</p>
-            <h2>Tell us what the building needs.</h2>
-            <p>We reply with a written quote. You approve the price before anyone is booked.</p>
+            <p className="eyebrow">Start with the clean</p>
+            <h2>Tell us what needs cleaning.</h2>
+            <p>We reply with a written quote. You approve the price before the visit is booked.</p>
           </div>
-          <Link href="/request" className="btn">
-            Request a service
+          <Link href={cleaningHref} className="btn">
+            Request cleaning
           </Link>
         </div>
       </section>

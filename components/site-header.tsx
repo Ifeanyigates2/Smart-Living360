@@ -20,10 +20,10 @@ export function SiteHeader() {
           </nav>
         ) : (
           <nav className="nav" aria-label="Primary">
-            <Link href="/#services">Services</Link>
-            <Link href="/request" className="btn btn-small">
-              <span className="wide-only">Request a service</span>
-              <span className="narrow-only">Request</span>
+            <Link href="/#services">Cleaning</Link>
+            <Link href="/request?category=Home%20care" className="btn btn-small">
+              <span className="wide-only">Request cleaning</span>
+              <span className="narrow-only">Cleaning</span>
             </Link>
           </nav>
         )}
