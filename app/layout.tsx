@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { Wordmark } from "@/components/wordmark";
 
-const sans = Outfit({
-  subsets: ["latin"],
+const sans = localFont({
+  src: "../fonts/outfit-latin-wght-normal.woff2",
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
