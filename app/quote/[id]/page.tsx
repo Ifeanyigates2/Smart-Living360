@@ -8,7 +8,11 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 const naira = (n: number) => `₦${n.toLocaleString("en-NG")}`;
-const typeLabel: Record<string, string> = { service: "Service", materials: "Materials", fee: "Platform fee (disclosed)" };
+const typeLabel: Record<string, string> = {
+  service: "Service",
+  materials: "Materials",
+  fee: "Platform fee (disclosed)",
+};
 
 export default async function QuotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -20,43 +24,55 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
   const validText = quote.validUntil.toLocaleDateString("en-GB", { day: "numeric", month: "long" });
 
   return (
-    <>
-      <h1 className="page-title">Your quote</h1>
-      <p className="muted">Reference {quote.requestId} · Valid until {validText}</p>
-
-      {quote.status === "approved" && <p className="notice">You approved this quote. Payment is the next step.</p>}
-      {quote.status === "declined" && <p className="notice">You declined this quote.</p>}
+    <div className="container page">
+      {quote.status === "approved" && (
+        <p className="notice notice-ok">You approved this quote. Payment is the next step.</p>
+      )}
+      {quote.status === "declined" && <p className="notice notice-bad">You declined this quote.</p>}
       {quote.status === "expired" || (quote.status === "sent" && expired) ? (
         <p className="notice">This quote has expired. Ask us for a new one.</p>
       ) : null}
 
-      <div className="panel" style={{ marginTop: "1.5rem" }}>
+      <article className="quote-sheet">
+        <header className="quote-head">
+          <div>
+            <p className="eyebrow">Written quote</p>
+            <h1 className="page-title">Your quote</h1>
+            <p className="muted">Reference {quote.requestId}</p>
+          </div>
+          <p className="valid-chip">Valid until {validText}</p>
+        </header>
+
         {quote.lines.map((l, i) => (
           <div className="line-row" key={i}>
             <span>
-              {l.description} <span className="muted">· {typeLabel[l.type] ?? l.type}</span>
+              {l.description} <span className="type-note">· {typeLabel[l.type] ?? l.type}</span>
             </span>
-            <span style={{ fontWeight: 600 }}>{naira(l.amount)}</span>
+            <span className="amount">{naira(l.amount)}</span>
           </div>
         ))}
         <div className="line-row line-total">
           <span>Total</span>
-          <span>{naira(quote.total)}</span>
+          <span className="amount">{naira(quote.total)}</span>
         </div>
-      </div>
+      </article>
 
       {open && (
         <div className="actions-row">
           <form action={approveQuoteAction}>
             <input type="hidden" name="id" value={id} />
-            <button className="btn" type="submit">Approve quote</button>
+            <button className="btn" type="submit">
+              Approve quote
+            </button>
           </form>
           <form action={declineQuoteAction}>
             <input type="hidden" name="id" value={id} />
-            <button className="btn btn-outline" type="submit">Decline</button>
+            <button className="btn btn-outline" type="submit">
+              Decline
+            </button>
           </form>
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -13,6 +13,12 @@ function age(createdAt: Date): string {
   return `${Math.round(mins / 1440)}d`;
 }
 
+function badgeFor(status: string) {
+  if (status === "submitted") return "badge badge-orange";
+  if (status === "quoted" || status === "quote_approved") return "badge badge-green";
+  return "badge";
+}
+
 export default async function OpsInboxPage() {
   const conn = await getDb();
   const requests = conn
@@ -25,34 +31,60 @@ export default async function OpsInboxPage() {
     : [];
 
   return (
-    <>
-      <h1 className="page-title">Request inbox</h1>
+    <div className="container page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Staff</p>
+          <h1 className="page-title">Request inbox</h1>
+          <p className="muted">Newest requests first. Open one to write a quote.</p>
+        </div>
+        <Link href="/ops/quotes/new" className="btn">
+          New quote
+        </Link>
+      </div>
+
       {!conn && <p className="notice">The database is not connected, so there are no requests to show.</p>}
-      {conn && requests.length === 0 && <p className="muted">No requests yet.</p>}
-      {requests.length > 0 && (
-        <table className="table" style={{ marginTop: "1.5rem" }}>
-          <thead>
-            <tr>
-              <th>Request</th>
-              <th>Customer</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Age</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((r) => (
-              <tr key={String(r._id)}>
-                <td><Link href={`/ops/quotes/new?requestId=${encodeURIComponent(String(r._id))}`}>{String(r._id)}</Link></td>
-                <td>{String(r.name ?? "")}</td>
-                <td>{String(r.category ?? "")}</td>
-                <td><span className="badge">{String(r.status ?? "submitted")}</span></td>
-                <td>{r.createdAt instanceof Date ? age(r.createdAt) : ""}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {conn && requests.length === 0 && (
+        <div className="empty">
+          <h2>No requests yet</h2>
+          <p>New customer requests will land here.</p>
+        </div>
       )}
-    </>
+      {requests.length > 0 && (
+        <div className="table-wrap">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Request</th>
+                <th>Customer</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Age</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requests.map((r) => {
+                const status = String(r.status ?? "submitted");
+                return (
+                  <tr key={String(r._id)}>
+                    <td>
+                      <Link href={`/ops/quotes/new?requestId=${encodeURIComponent(String(r._id))}`}>
+                        {String(r._id)}
+                      </Link>
+                    </td>
+                    <td>{String(r.name ?? "")}</td>
+                    <td>{String(r.category ?? "")}</td>
+                    <td>
+                      <span className={badgeFor(status)}>{status.replaceAll("_", " ")}</span>
+                    </td>
+                    <td>{r.createdAt instanceof Date ? age(r.createdAt) : ""}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 type Line = { description: string; amount: string; type: "service" | "materials" | "fee" };
 
@@ -55,30 +54,47 @@ function QuoteForm() {
   const total = lines.reduce((s, l) => s + (Number(l.amount) || 0), 0);
 
   return (
-    <>
+    <div className="container page">
+      <p className="eyebrow">Staff</p>
       <h1 className="page-title">New quote</h1>
-      <form className="request" onSubmit={submit}>
-        <label>
-          Request reference
-          <input required value={requestId} onChange={(e) => setRequestId(e.target.value)} placeholder="REQ-XXXX" />
-        </label>
-        <label>
-          Valid for (days, 1 to 30)
-          <input type="number" min={1} max={30} value={validDays} onChange={(e) => setValidDays(e.target.value)} />
-        </label>
+      <p className="lead">Each line is service, materials, or the platform fee. The fee stays visible.</p>
+      <form className="request quote-form" onSubmit={submit}>
+        <div className="quote-meta">
+          <label className="field">
+            Request reference
+            <input required value={requestId} onChange={(e) => setRequestId(e.target.value)} placeholder="REQ-XXXX" />
+          </label>
+          <label className="field">
+            Valid for (days, 1 to 30)
+            <input type="number" min={1} max={30} value={validDays} onChange={(e) => setValidDays(e.target.value)} />
+          </label>
+        </div>
 
         <div className="panel">
           {lines.map((l, i) => (
-            <div key={i} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "0.5rem", alignItems: "end" }}>
-              <label>
+            <div className="quote-line" key={i}>
+              <label className="field">
                 Description
-                <input required minLength={2} maxLength={200} value={l.description} onChange={(e) => update(i, { description: e.target.value })} />
+                <input
+                  required
+                  minLength={2}
+                  maxLength={200}
+                  value={l.description}
+                  onChange={(e) => update(i, { description: e.target.value })}
+                />
               </label>
-              <label>
+              <label className="field">
                 Amount (₦)
-                <input required type="number" min={1} step={1} value={l.amount} onChange={(e) => update(i, { amount: e.target.value })} />
+                <input
+                  required
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={l.amount}
+                  onChange={(e) => update(i, { amount: e.target.value })}
+                />
               </label>
-              <label>
+              <label className="field">
                 Type
                 <select value={l.type} onChange={(e) => update(i, { type: e.target.value as Line["type"] })}>
                   <option value="service">Service</option>
@@ -86,35 +102,54 @@ function QuoteForm() {
                   <option value="fee">Platform fee</option>
                 </select>
               </label>
-              <button type="button" className="btn btn-outline" disabled={lines.length === 1} onClick={() => setLines((p) => p.filter((_, idx) => idx !== i))}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                disabled={lines.length === 1}
+                onClick={() => setLines((p) => p.filter((_, idx) => idx !== i))}
+              >
                 Remove
               </button>
             </div>
           ))}
-          <div className="line-row">
-            <button type="button" className="btn btn-outline" disabled={lines.length >= 20} onClick={() => setLines((p) => [...p, blankLine()])}>
+          <div className="line-actions">
+            <button
+              type="button"
+              className="btn btn-outline"
+              disabled={lines.length >= 20}
+              onClick={() => setLines((p) => [...p, blankLine()])}
+            >
               Add line
             </button>
-            <strong>Total: ₦{total.toLocaleString("en-NG")}</strong>
+            <strong className="amount">Total: ₦{total.toLocaleString("en-NG")}</strong>
           </div>
         </div>
 
-        {error && <p role="alert" style={{ color: "var(--brand-red)" }}>{error}</p>}
-        <button className="btn" type="submit" disabled={busy}>{busy ? "Creating…" : "Create quote"}</button>
+        {error && (
+          <p className="alert" role="alert">
+            {error}
+          </p>
+        )}
+        <button className="btn" type="submit" disabled={busy}>
+          {busy ? "Creating…" : "Create quote"}
+        </button>
       </form>
 
       {link && (
-        <p className="notice">
-          Quote created. Send the customer this link: <a href={link}>{link}</a>
+        <p className="notice notice-ok" style={{ marginTop: "1rem" }}>
+          Quote created. Send the customer this link.
+          <a className="link-block" href={link}>
+            {link}
+          </a>
         </p>
       )}
-    </>
+    </div>
   );
 }
 
 export default function NewQuotePage() {
   return (
-    <Suspense fallback={<p className="muted">Loading…</p>}>
+    <Suspense fallback={<p className="muted container page">Loading…</p>}>
       <QuoteForm />
     </Suspense>
   );

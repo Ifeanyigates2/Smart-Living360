@@ -4,6 +4,8 @@
 export const siteImages = {
   hero: "/images/trade-02.jpg",
   categories: {
+    "Home care": "/images/trade-15.jpg",
     Repairs: "/images/trade-04.jpg",
+    "Build & materials": "/images/trade-13.jpg",
   } as Record<string, string>,
 };
